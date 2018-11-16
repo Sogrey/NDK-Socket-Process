@@ -149,7 +149,7 @@ Java_top_sogrey_socketprocess_Watcher_connectWatcher(JNIEnv *env, jobject instan
             LOGE("连接失败");
             close(socked);
             sleep(1);
-            //在下一次尝试
+            //再下一次尝试
             continue;
         }
         //成功
