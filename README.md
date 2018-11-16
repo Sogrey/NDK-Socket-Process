@@ -20,8 +20,7 @@ graph TB
     TCP_write(write)-->TCP_read(read)
     TCP_write(write)-->TCP_read2(read)
     TCP_read2(read)-->TCP_close(close)
-    end
-    
+    end    
     subgraph APK进程<TCP客户端>
     apk_socket(socket)-->apk_connect(connect)
     apk_connect(connect)-->apk_write(write)
@@ -29,9 +28,8 @@ graph TB
     apk_read(read)-->apk_write(write)
     apk_read(read)-->apk_close(close)
     end    
-   
     apk_connect(connect)--建立连接---TCP_read(read)
-	apk_write(write)--请求数据---TCP_read(read)
-	TCP_write(write)--回应数据-->apk_read(read)
-	apk_close(close)--结束连接-->TCP_read2(read)    
+    apk_write(write)--请求数据---TCP_read(read)
+    TCP_write(write)--回应数据-->apk_read(read)
+    apk_close(close)--结束连接-->TCP_read2(read)    
 ```
