@@ -33,7 +33,7 @@ public class ProcessService extends Service {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                Log.i("XXX","服务开启中 "+i++);
+                Log.i("NDK-Socket","服务运行中 "+i++);
             }
         },0,1000*3);
     }

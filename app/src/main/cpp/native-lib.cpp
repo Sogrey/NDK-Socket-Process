@@ -6,7 +6,6 @@
 #include "native-lib.h"
 
 const char *PATH = "/data/data/top.sogrey.socketprocess/my.sock";
-
 int m_child = 0;
 const char *userId;
 
@@ -16,7 +15,7 @@ const char *userId;
  */
 void child_do_work() {
     //开启Socket - 服务端
-    if (child_create_channel()) {
+    if (child_create_channel()==0) {
         child_listen_msg();
     }
 }
@@ -26,6 +25,7 @@ void child_do_work() {
  * 客户端
  */
 void child_listen_msg() {
+    LOGE("服务端读取信息");
     fd_set rfds;
     struct timeval timeout = {3, 0};
     while (1) {
@@ -59,6 +59,7 @@ void child_listen_msg() {
  * @return
  */
 int child_create_channel() {
+    LOGE("创建服务端socket");
     //创建Socket 返回句柄
     int listenfd = socket(AF_LOCAL, SOCK_STREAM, 0);
 
@@ -69,15 +70,15 @@ int child_create_channel() {
     struct sockaddr_un addr;
 
     //清空内存
-    memset(&addr, 0, sizeof(sockaddr));
+    memset(&addr, 0, sizeof(sockaddr_un));
     //协议
     addr.sun_family = AF_LOCAL;
     //拷贝- 赋值
     strcpy(addr.sun_path, PATH);
-//绑定
+    //绑定
     if (bind(listenfd, (const sockaddr *) &addr, sizeof(sockaddr_un)) < 0) {
         LOGE("绑定错误");
-        return 0;
+        return -1;
     }
 
     //监听5个客户端
@@ -92,7 +93,7 @@ int child_create_channel() {
                 continue;
             } else {
                 LOGE("绑定错误");
-                return 0;
+                return -1;
             }
         }
         //成功
@@ -108,15 +109,17 @@ JNIEXPORT void JNICALL
 Java_top_sogrey_socketprocess_Watcher_createWatcher(JNIEnv *env, jobject instance,
                                                     jstring userId_) {
     userId = env->GetStringUTFChars(userId_, 0);
-
+    LOGE("userId->%d",userId);
     // 开双进程
     pid_t pid = fork();
+    LOGE("开双进程->%d",pid);
     if (pid < 0) {//失败
-
+        LOGE("开双进程->失败");
     } else if (pid == 0) {//子进程 - 当前守护进程
+        LOGE("开双进程->开启子进程");
         child_do_work();//守护
     } else if (pid > 0) {//父进程
-
+        LOGE("开双进程->父进程");
     }
 
     env->ReleaseStringUTFChars(userId_, userId);
