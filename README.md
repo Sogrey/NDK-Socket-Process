@@ -1,6 +1,7 @@
 # NDK-Socket-Process
 ndk socket 双线程守护
 
+[![CodeFactor](https://www.codefactor.io/repository/github/sogrey/ndk-socket-process/badge)](https://www.codefactor.io/repository/github/sogrey/ndk-socket-process)
 
 
 
